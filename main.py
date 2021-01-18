@@ -43,11 +43,10 @@ def create_dict_list(filename, data_count):
             line = f.readline()
             continue
 
-        if (state == State.Before):
-            if (line == '一変量の分布'):
-                state = State.Labeling
-                line = f.readline()
-                continue
+        if (line.startswith('一変量の分布')):
+            state = State.Labeling
+            line = f.readline()
+            continue
 
         if (state == State.Labeling):
             data = Data()
