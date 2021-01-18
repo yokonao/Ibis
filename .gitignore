@@ -3,3 +3,4 @@
 *.csv
 !example.txt
 !example.csv
+__pycache__/

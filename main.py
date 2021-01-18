@@ -30,11 +30,9 @@ def trim(string):
     return string
 
 
-def create_dict_list():
+def create_dict_list(filename, data_count):
     res = []
-    args = sys.argv
-    f = open('txt/' + args[1] + '.txt', 'r')
-    data_count = int(args[2])
+    f = open('txt/' + filename + '.txt', 'r')
     state = State.Before
     line = f.readline()
     data = Data()
@@ -136,8 +134,9 @@ def data_to_dict(data):
 
 if __name__ == '__main__':
     os.makedirs('csv', exist_ok=True)
-    f = open('csv/' + sys.argv[1] + '.csv', 'w')
-    data_list = create_dict_list()
+    args = sys.argv
+    f = open('csv/' + args[1] + '.csv', 'w')
+    data_list = create_dict_list(args[1], int(args[2]))
     writer = csv.DictWriter(f, data_list[0].keys())
     writer.writeheader()
     for row in data_list:
