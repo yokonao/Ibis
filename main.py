@@ -44,6 +44,11 @@ def create_dict_list(filename, data_count):
             continue
 
         if (line.startswith('一変量の分布')):
+            line = line.split('一変量の分布')[1]
+            if (line):
+                data = Data()
+                data.label = line
+                res.append(data_to_dict(data))
             state = State.Labeling
             line = f.readline()
             continue
@@ -121,7 +126,7 @@ def create_dict_list(filename, data_count):
 def data_to_dict(data):
     res = dict()
     res['ラベル'] = data.label
-    res['欠損数'] = data.missing
+    res['欠損数'] = data.missing if hasattr(data, 'missing') else ''
     res['0'] = data.zero if hasattr(data, 'zero') else ''
     res['1'] = data.one if (hasattr(data, 'one')) else ''
     res['第三四分位数'] = data.third_quartile if (hasattr(data, 'third_quartile')) else ''
