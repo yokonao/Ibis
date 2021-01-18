@@ -110,7 +110,7 @@ def create_dict_list(filename, data_count):
                 if (line.startswith('平均の下側95%')):
                     line = f.readline()
                     line = trim(line)
-                    data.missing = data_count - int(line.split('N')[1])
+                    data.n_value = int(line.split('N')[1])
                     continue
                 line = f.readline()
                 line = trim(line)
@@ -126,7 +126,8 @@ def create_dict_list(filename, data_count):
 def data_to_dict(data):
     res = dict()
     res['ラベル'] = data.label
-    res['欠損数'] = data.missing if hasattr(data, 'missing') else ''
+    res['データ欠損'] = data.missing if hasattr(data, 'missing') else ''
+    res['N数'] = data.n_value if(hasattr(data, 'n_value')) else ''
     res['0'] = data.zero if hasattr(data, 'zero') else ''
     res['1'] = data.one if (hasattr(data, 'one')) else ''
     res['第三四分位数'] = data.third_quartile if (hasattr(data, 'third_quartile')) else ''
