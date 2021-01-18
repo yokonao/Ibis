@@ -4,7 +4,7 @@ import csv
 
 if __name__ == '__main__':
     f = open('test.csv', 'w')
-    data_list = main.create_dict_list('example', 24)
+    data_list = main.create_dict_list('example')
     writer = csv.DictWriter(f, data_list[0].keys())
     writer.writeheader()
     for row in data_list:

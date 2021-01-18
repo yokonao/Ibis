@@ -30,7 +30,7 @@ def trim(string):
     return string
 
 
-def create_dict_list(filename, data_count):
+def create_dict_list(filename):
     res = []
     f = open('txt/' + filename + '.txt', 'r')
     state = State.Before
@@ -43,11 +43,15 @@ def create_dict_list(filename, data_count):
             line = f.readline()
             continue
 
-        if (state == State.Before):
-            if (line == '一変量の分布'):
-                state = State.Labeling
-                line = f.readline()
-                continue
+        if (line.startswith('一変量の分布')):
+            line = line.split('一変量の分布')[1]
+            if (line):
+                data = Data()
+                data.label = line
+                res.append(data_to_dict(data))
+            state = State.Labeling
+            line = f.readline()
+            continue
 
         if (state == State.Labeling):
             data = Data()
@@ -106,7 +110,7 @@ def create_dict_list(filename, data_count):
                 if (line.startswith('平均の下側95%')):
                     line = f.readline()
                     line = trim(line)
-                    data.missing = data_count - int(line.split('N')[1])
+                    data.n_value = int(line.split('N')[1])
                     continue
                 line = f.readline()
                 line = trim(line)
@@ -122,7 +126,8 @@ def create_dict_list(filename, data_count):
 def data_to_dict(data):
     res = dict()
     res['ラベル'] = data.label
-    res['欠損数'] = data.missing
+    res['データ欠損'] = data.missing if hasattr(data, 'missing') else ''
+    res['N数'] = data.n_value if(hasattr(data, 'n_value')) else ''
     res['0'] = data.zero if hasattr(data, 'zero') else ''
     res['1'] = data.one if (hasattr(data, 'one')) else ''
     res['第三四分位数'] = data.third_quartile if (hasattr(data, 'third_quartile')) else ''
@@ -136,7 +141,7 @@ if __name__ == '__main__':
     os.makedirs('csv', exist_ok=True)
     args = sys.argv
     f = open('csv/' + args[1] + '.csv', 'w')
-    data_list = create_dict_list(args[1], int(args[2]))
+    data_list = create_dict_list(args[1])
     writer = csv.DictWriter(f, data_list[0].keys())
     writer.writeheader()
     for row in data_list:
